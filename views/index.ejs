@@ -5,75 +5,64 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="<%= csrfToken %>">
-    <link rel="stylesheet" href="./css/style.css">
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>To-Do manager</title>
     <script>
-        var token = document
-            .querySelector('meta[name="csrf-token"]')
-            .getAttribute("content");
-        function updateTodo(id) {
-            const check = document.getElementById(`value${id}`).checked;
-            fetch(`/todos/${id}`,{
-                method: "put",
-                headers: { "Content-Type": "application/json" },
+        var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        function changeTodoStaus(id) {
+            console.log(id)
+            let completionStatus = document.getElementById(`todo-checkbox-${id}`).checked;
+            console.log("fiujcv");
+            fetch(`/todos/${id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
                 body: JSON.stringify({
-                    "_csrf": token,
-                    completed: check,
-                }),
-            })
-                .then((res) => {
-                    if(res.ok){
-                    window.location.reload();
-                    }
-                })
-                .catch((err) => console.log(err));
-        }
-        function deleteTodo(id) {
-            fetch(`/todos/${id}`,{
-                method: "delete",
-                headers: { "Content-Type": "application/json"},
-                body: JSON.stringify({
-                    "_csrf": token
+                    _csrf: token,
+                    completed: completionStatus
                 })
             })
-                .then((res) => {
-                    if(res.ok){
+            .then((res) => {
+                if (res.ok){
                     window.location.reload();
-                    }
-                })
-                .catch((err) => console.log(err));
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            })
         }
-    </script>
+        function deleteTodo(id){
+            fetch(`/todos/${id}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    _csrf: token
+                })
+            })
+            .then((res) => {
+                if (res.ok){
+                    window.location.reload();
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+        }
+      </script>
+    <title>Todo Manager</title>
 </head>
 <body>
-    <body>
-        <div class="grid grid-cols-6">
-            <div class="col-start-3 col-span-2">
-                <%- include('header.ejs') %>
-                <form action="/todos" method="post">
-                    <input type="hidden" name="_csrf" value="<%= csrfToken %>"/>
-                    <div class="flex gap-2 py-4">
-                        <div class="flex-auto">
-                            <input type="text" name="title" placeholder="what's next?" class="border border-gray-300 rounded w-full text-gray-900 p-2 text-sm" required>
-                        </div>
-                        <div class="flex-auto">
-                            <input type="date" name="dueDate" class="border border-gray-300 rounded w-full text-gray-900 p-2 text-sm leading-4" required/>
-                        </div>
-                        <div class="flex-none">
-                            <button type="submit" class="bg-yellow-600 text-white px-5 py-1.5 rounded font-medium mr-2 mb-2">Add</button>
-                        </div>
-                    </div>
-                </form>
-                <div>
-                    <%- include('todos.ejs', {title: "Overdue", data: overduetodo}) %> <%-
-                    include('todos.ejs', {title: "Due Today", data: duetodaytodo}) %> <%-
-                    include('todos.ejs', {title: "Due Later", data: duelatertodo}) %> <%-
-                    include('todos.ejs', {title: "Completed Items", data: completed}) %>
-                </div>
-            </div>
-        </div>
-        
-      </body>
+    <div class="grid grid-cols-6">
+        <div class="col-start-3 col-span-2">
+            <%- include('header.ejs') %>
+            <%- include('addTodoFrom.ejs') %>
+            <%- include('todos.ejs', {section: "OverDue", todos: overDue, id: "overdue"}) %>
+            <%- include('todos.ejs', {section: "Due Today", todos: dueToday, id: "due-today"}) %>
+            <%- include('todos.ejs', {section: "Due Later", todos: dueLater, id: "due-later"}) %>
+            <%- include('todos.ejs', {section: "Completed", todos: completedItems, id: "completed-items"}) %>
+        </div> 
+    </div>
 </body>
 </html>
