@@ -1,6 +1,6 @@
 const app = require("./app");
-const port = typeof process.env.PORT === "undefined" ? 3000 : process.env.PORT;
-
+// eslint-disable-next-line no-undef
+var port = process.env.PORT || 3000;
 app.listen(port, () => {
-  console.log("Started express server at port " + port);
+  console.log("Started express server at port 3000");
 });
