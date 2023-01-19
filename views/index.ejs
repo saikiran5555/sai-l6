@@ -1,68 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="<%= csrfToken %>">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <meta name="csrf-token" content="<%= csrfToken %>" />
+    <link href="./css/style.css" rel="stylesheet" />
+    <title>To-Do Manager</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        function changeTodoStaus(id) {
-            console.log(id)
-            let completionStatus = document.getElementById(`todo-checkbox-${id}`).checked;
-            console.log("fiujcv");
-            fetch(`/todos/${id}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    _csrf: token,
-                    completed: completionStatus
-                })
-            })
-            .then((res) => {
-                if (res.ok){
-                    window.location.reload();
-                }
-            })
-            .catch((err) => {
-                console.log(err);
-            })
-        }
-        function deleteTodo(id){
-            fetch(`/todos/${id}`, {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    _csrf: token
-                })
-            })
-            .then((res) => {
-                if (res.ok){
-                    window.location.reload();
-                }
-            })
-            .catch((err) => {
-                console.log(err);
-            })
-        }
-      </script>
-    <title>Todo Manager</title>
-</head>
-<body>
+    <link href="./css/style.css" rel="stylesheet" />
+    
+  </head>
+  <body>
     <div class="grid grid-cols-6">
-        <div class="col-start-3 col-span-2">
-            <%- include('header.ejs') %>
-            <%- include('addTodoFrom.ejs') %>
-            <%- include('todos.ejs', {section: "OverDue", todos: overDue, id: "overdue"}) %>
-            <%- include('todos.ejs', {section: "Due Today", todos: dueToday, id: "due-today"}) %>
-            <%- include('todos.ejs', {section: "Due Later", todos: dueLater, id: "due-later"}) %>
-            <%- include('todos.ejs', {section: "Completed", todos: completedItems, id: "completed-items"}) %>
-        </div> 
+      <div class="col-start-3 col-span-2">
+        <%- include("header.ejs") %> 
+        <p class="py-2">Welcome to the To-Do Manager</p>
+        <p class="py-2">New User? <a href="/signup" class="text-green-600"> Sign-up now </a> </p>
+        <p class="py-2">Existing User? <a href="/login" class="text-green-600">Sign-in</a></p>
+      </div>
     </div>
-</body>
+  </body>
 </html>
